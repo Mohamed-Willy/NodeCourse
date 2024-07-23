@@ -2,7 +2,9 @@ const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
-const replaceTemplate = require('./modules/replaceTemplate')
+const slugify = require('slugify');
+
+const replaceTemplate = require('./modules/replaceTemplate');
 
 // Blocking, Synchronous Way
 /*
@@ -28,59 +30,68 @@ const replaceTemplate = require('./modules/replaceTemplate')
 */
 
 // Read Json Data
-const data = fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8');
+const data = fs.readFileSync(
+  `${__dirname}/starter/dev-data/data.json`,
+  'utf-8'
+);
+
 // Convert data to string
 const productData = JSON.parse(data);
-console.log(productData);
+// console.log(productData);
 
-const homeTemp = fs.readFileSync(`${__dirname}/starter/templates/overview.html`, 'utf-8');
-const cardTemp = fs.readFileSync(`${__dirname}/starter/templates/card.html`, 'utf-8');
-const productTemp = fs.readFileSync(`${__dirname}/starter/templates/product.html`, 'utf-8');
+const slugs = productData.map((elm) =>
+  slugify(elm.productName, { lower: true })
+);
+console.log(slugs);
+
+const homeTemp = fs.readFileSync(
+  `${__dirname}/starter/templates/overview.html`,
+  'utf-8'
+);
+const cardTemp = fs.readFileSync(
+  `${__dirname}/starter/templates/card.html`,
+  'utf-8'
+);
+const productTemp = fs.readFileSync(
+  `${__dirname}/starter/templates/product.html`,
+  'utf-8'
+);
 
 // Creating the server
-const server = http.createServer((request, response) =>{
-    // console.log(`Request URL: ${request.url}`)
-    
-    const {query, pathname} = url.parse(request.url, true);
-    
-    const pathName = pathname;// request.url;
+const server = http.createServer((request, response) => {
+  // console.log(`Request URL: ${request.url}`)
 
+  const { query, pathname } = url.parse(request.url, true);
 
-    if(pathName === '/home' || pathName === '/'){
-        //response.end("This is the home page");
-        
-        response.writeHead(200, {'Content-type': 'text/html'});
+  const pathName = pathname; // request.url;
+  if (pathName === '/home' || pathName === '/') {
+    // response.end("This is the home page");
 
-        const cardHTML = productData.map(elm => replaceTemplate(cardTemp, elm)).join('');
-        console.log(cardHTML);
-        const output = homeTemp.replace('{%ProductCards%}', cardHTML);
+    response.writeHead(200, { 'Content-type': 'text/html' });
 
-        response.end(output);
-    }
-    
-    
-    else if(pathName === '/product'){
-        // response.end("This is the product page");
-        const product = productData[query.id];
-        const output = replaceTemplate(productTemp, product);
-        response.end(output);
-    }
-    
-    
-    else if (pathName === '/api'){
-        response.writeHead(200, {'Content-type': 'application/json'});
-        response.end(data);
-    }
-    
-    
-    else {
-        response.writeHead(404, {
-            'Content-type': 'text/html',
-            'my-own-header': 'Willy Error Header'
-        });
-        response.end('<h1>Hello I\'m the server you are falling back</h1>');
-    }
+    const cardHTML = productData
+      .map((elm) => replaceTemplate(cardTemp, elm))
+      .join('');
+    console.log(cardHTML);
+    const output = homeTemp.replace('{%ProductCards%}', cardHTML);
+
+    response.end(output);
+  } else if (pathName === '/product') {
+    // response.end("This is the product page");
+    const product = productData[query.id];
+    const output = replaceTemplate(productTemp, product);
+    response.end(output);
+  } else if (pathName === '/api') {
+    response.writeHead(200, { 'Content-type': 'application/json' });
+    response.end(data);
+  } else {
+    response.writeHead(404, {
+      'Content-type': 'text/html',
+      'my-own-header': 'Willy Error Header',
+    });
+    response.end("<h1>Hello I'm the server you are falling back</h1>");
+  }
 });
-server.listen(8000, '127.0.0.1', () =>{
-    console.log('Listening on 127.0.0.1 port 8000');
+server.listen(8000, '127.0.0.1', () => {
+  console.log('Listening on 127.0.0.1 port 8000');
 });
