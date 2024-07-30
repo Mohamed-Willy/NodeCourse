@@ -14,3 +14,8 @@ Notes:
 5- Use {CTRL + C} to exit the process (Server)
 6- Event Loop:
 ![alt text](image-1.png)
+7- Event Arcitecture:
+![alt text](image-3.png)
+8- Streams:
+![alt text](image-2.png)
+9- Backpressure error: When respone can't send data as fast as it is resieving it
