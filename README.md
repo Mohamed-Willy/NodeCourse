@@ -19,3 +19,10 @@ Notes:
 8- Streams:
 ![alt text](image-2.png)
 9- Backpressure error: When respone can't send data as fast as it is resieving it
+10- POST request used to create new resource
+11- GET request used to read a resource
+12- PUT request used to update all resources
+13- PATCH request used to update a patch from the data
+14- DELETE request used to delete a resource
+15- CRUD are the name of these operations (Create, Read, Update, Delete)
+16- ![alt text](image-4.png)
