@@ -39,3 +39,5 @@ Notes:
 24- To completly replace use replaceOne or replaceMany
 25- To delete we use deleteMany or deleteOne
 26- db.tours.deleteMany({}) to delete all the objects
+27- MVC Architecture: Model (Business logic layer) - Controller (Application Logic Layer) - View Layer
+![alt text](image-6.png)
